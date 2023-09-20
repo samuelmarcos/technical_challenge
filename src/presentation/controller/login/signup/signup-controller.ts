@@ -1,3 +1,4 @@
+import { badRequest } from "@/presentation/helpers/http-helpers";
 import { Controller, HttpRequest, HttpResponse, Validation } from "@/presentation/protocols";
 
 export class SignupController implements Controller {
@@ -6,7 +7,9 @@ export class SignupController implements Controller {
 
   public async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
 
-    this.validator.validate(httpRequest.body)
+    const error: any = this.validator.validate(httpRequest.body)
+
+    if(error) return badRequest(error)
 
     return Promise.resolve({
       statusCode: 200,
