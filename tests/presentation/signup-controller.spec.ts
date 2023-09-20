@@ -1,7 +1,9 @@
 import { SignupController } from '@/presentation/controller/login/signup/signup-controller'
 import { mockValidation } from '@/tests/mocks/validation/index'
-import { Controller, Validation } from './protocols'
+import { Controller, Validation } from '@/presentation/protocols'
 import { mockSignupHttpRequest } from '@/tests/mocks/http'
+import { MissingParamError } from '@/presentation/errors'
+import { badRequest } from '@/presentation/helpers/http-helpers'
 
 type SutTypes = {
   sut: Controller
@@ -18,10 +20,15 @@ const makeSut = (): SutTypes => {
 describe('SignupController tests', () => {
   test('shoud call validation correct email', async () => {
     const { sut, validationStub } = makeSut()
-    const httpRequest = mockSignupHttpRequest()
     const validationSpied = jest.spyOn(validationStub, 'validate')
-    await sut.handle(httpRequest)
-    expect(validationSpied).toHaveBeenCalledWith(httpRequest.body)
+    await sut.handle(mockSignupHttpRequest())
+    expect(validationSpied).toHaveBeenCalledWith(mockSignupHttpRequest().body)
   })
 
+  test('should return 400 if validation return an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => new MissingParamError('any_field'))
+    const httResponse = await sut.handle(mockSignupHttpRequest())
+    expect(httResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
 })
