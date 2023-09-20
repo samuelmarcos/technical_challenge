@@ -24,4 +24,11 @@ describe('DbAddAccount tests', () => {
     const account = await sut.add(mockAddAccountParams())
     expect(account).toBe(null)
   })
+
+  test('should call LoadAccountByEmailRepository with correct email', async () => {
+    const {sut, loadAccountByEmailRepositoryStub} = makeSut()
+    const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+    await sut.add(mockAddAccountParams())
+    expect(loadSpy).toHaveBeenLastCalledWith('any_email@email.com')
+  })
 })
