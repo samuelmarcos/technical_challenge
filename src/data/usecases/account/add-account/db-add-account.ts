@@ -1,10 +1,11 @@
 import { Hasher } from '@/data/protocols/cryptography/hasher'
-import { AccountModel, LoadAccountByEmailRepository, AddAccountParams, AddAccount} from './db-add-account-protocols'
+import { AccountModel, LoadAccountByEmailRepository, AddAccountParams, AddAccount, AddAccountRepository} from './db-add-account-protocols'
 
 export class DbAddAccount implements AddAccount {
 
   constructor(private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
-              private readonly hasher: Hasher) {}
+              private readonly hasher: Hasher,
+              private readonly addAccountRepository: AddAccountRepository) {}
 
   public async add(accountData: AddAccountParams): Promise<AccountModel> {
 
@@ -12,7 +13,9 @@ export class DbAddAccount implements AddAccount {
 
     if(account) return null
 
-    await this.hasher.hash(accountData.password)
+    const hashedPassword = await this.hasher.hash(accountData.password)
+
+    await this.addAccountRepository.add({...accountData, password: hashedPassword})
 
     return Promise.resolve({
       id: 'any_id',
