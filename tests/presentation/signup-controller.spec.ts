@@ -78,4 +78,12 @@ describe('SignupController tests', () => {
     await sut.handle(mockSignupHttpRequest())
     expect(authSpy).toHaveBeenLastCalledWith({ email: 'any_email@email.com', password: 'any_password' })
   })
+
+  test('should 500 if authrntivation throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => { reject(new Error()) }))
+    const httpResponse = await sut.handle(mockSignupHttpRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError('any_stack')))
+
+  })
 })
