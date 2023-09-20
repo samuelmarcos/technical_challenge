@@ -5,6 +5,7 @@ import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-a
 import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/mock-account'
 import { mockHasher } from '@/tests/mocks/data/cryptography/index'
 import { Hasher } from '@/data/protocols/cryptography/hasher'
+import { throwError } from '@/tests/mocks/helpers/test-helper'
 
 type SutTypes = {
   sut: AddAccount
@@ -15,7 +16,7 @@ type SutTypes = {
 const makeSut = ():SutTypes => {
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
   const hasherStub = mockHasher()
-  const sut = new DbAddAccount(loadAccountByEmailRepositoryStub)
+  const sut = new DbAddAccount(loadAccountByEmailRepositoryStub, hasherStub)
   return { sut, loadAccountByEmailRepositoryStub, hasherStub }
 }
 
@@ -39,5 +40,12 @@ describe('DbAddAccount tests', () => {
     const encryptSpy = jest.spyOn(hasherStub, 'hash')
     await sut.add(mockAddAccountParams())
     expect(encryptSpy).toHaveBeenLastCalledWith('any_password')
-})
+  })
+
+  test('should throw if hasher throws', async () => {
+    const { hasherStub, sut } = makeSut()
+    jest.spyOn(hasherStub, 'hash').mockImplementationOnce(throwError)
+    const promiseAccount =  sut.add(mockAccountModel())
+    await expect(promiseAccount).rejects.toThrow()
+  })
 })
