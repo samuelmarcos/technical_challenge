@@ -1,14 +1,15 @@
-import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
-import { AccountModel, AddAccount, AddAccountParams } from "./db-add-account-protocols";
+import { AccountModel, LoadAccountByEmailRepository, AddAccountParams, AddAccount} from './db-add-account-protocols'
 
 export class DbAddAccount implements AddAccount {
 
   constructor(private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository) {}
 
-  public async add(account: AddAccountParams): Promise<AccountModel> {
+  public async add(accountData: AddAccountParams): Promise<AccountModel> {
 
-    await this.loadAccountByEmailRepository.loadByEmail(account.email)
-    
+    const account = await this.loadAccountByEmailRepository.loadByEmail(accountData.email)
+
+    if(account) return null
+
     return Promise.resolve({
       id: 'any_id',
       name: 'any_name',
