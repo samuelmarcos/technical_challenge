@@ -70,5 +70,12 @@ describe('SignupController tests', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockSignupHttpRequest())
     expect(httpResponse).toEqual(ok({ accessToken: 'any_token'}))
-})
+  })
+
+  test('should call athentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    await sut.handle(mockSignupHttpRequest())
+    expect(authSpy).toHaveBeenLastCalledWith({ email: 'any_email@email.com', password: 'any_password' })
+  })
 })
