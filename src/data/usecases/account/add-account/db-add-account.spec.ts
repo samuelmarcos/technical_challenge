@@ -3,18 +3,20 @@ import { mockLoadAccountByEmailRepository } from '@/tests/mocks/data/db'
 import { AddAccount } from './db-add-account-protocols'
 import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository'
 import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/mock-account'
-
+import { mockHasher } from '@/tests/mocks/data/cryptography/index'
+import { Hasher } from '@/data/protocols/cryptography/hasher'
 
 type SutTypes = {
   sut: AddAccount
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
+  hasherStub: Hasher
 }
 
 const makeSut = ():SutTypes => {
-
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
+  const hasherStub = mockHasher()
   const sut = new DbAddAccount(loadAccountByEmailRepositoryStub)
-  return { sut, loadAccountByEmailRepositoryStub }
+  return { sut, loadAccountByEmailRepositoryStub, hasherStub }
 }
 
 describe('DbAddAccount tests', () => {
@@ -31,4 +33,11 @@ describe('DbAddAccount tests', () => {
     await sut.add(mockAddAccountParams())
     expect(loadSpy).toHaveBeenLastCalledWith('any_email@email.com')
   })
+
+  test('should call Hasher with correct password', async () => {
+    const { hasherStub, sut } = makeSut()
+    const encryptSpy = jest.spyOn(hasherStub, 'hash')
+    await sut.add(mockAddAccountParams())
+    expect(encryptSpy).toHaveBeenLastCalledWith('any_password')
+})
 })
