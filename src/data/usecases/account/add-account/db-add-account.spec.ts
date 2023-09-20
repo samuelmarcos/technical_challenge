@@ -1,7 +1,7 @@
 import { DbAddAccount } from './db-add-account'
-import { mockLoadAccountByEmailRepository } from '@/tests/mocks/data/db'
+import { mockLoadAccountByEmailRepository, mockAddAccountRepository } from '@/tests/mocks/data/db'
 import { AddAccount } from './db-add-account-protocols'
-import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository'
+import { LoadAccountByEmailRepository, AddAccountRepository } from '@/data/protocols/db/account'
 import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/mock-account'
 import { mockHasher } from '@/tests/mocks/data/cryptography/index'
 import { Hasher } from '@/data/protocols/cryptography/hasher'
@@ -11,13 +11,15 @@ type SutTypes = {
   sut: AddAccount
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hasherStub: Hasher
+  addAccountRepositoryStub: AddAccountRepository
 }
 
 const makeSut = ():SutTypes => {
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
   const hasherStub = mockHasher()
-  const sut = new DbAddAccount(loadAccountByEmailRepositoryStub, hasherStub)
-  return { sut, loadAccountByEmailRepositoryStub, hasherStub }
+  const addAccountRepositoryStub = mockAddAccountRepository()
+  const sut = new DbAddAccount(loadAccountByEmailRepositoryStub, hasherStub, addAccountRepositoryStub)
+  return { sut, loadAccountByEmailRepositoryStub, hasherStub, addAccountRepositoryStub }
 }
 
 describe('DbAddAccount tests', () => {
@@ -47,5 +49,16 @@ describe('DbAddAccount tests', () => {
     jest.spyOn(hasherStub, 'hash').mockImplementationOnce(throwError)
     const promiseAccount =  sut.add(mockAccountModel())
     await expect(promiseAccount).rejects.toThrow()
+  })
+
+  test('should call AddAccountRepository with correct values', async () => {
+    const { addAccountRepositoryStub, sut } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+    await sut.add(mockAddAccountParams())
+    expect(addSpy).toHaveBeenLastCalledWith({
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'hashed_password'
+    })
   })
 })
