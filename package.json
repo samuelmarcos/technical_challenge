@@ -22,9 +22,7 @@
   },
   "homepage": "https://github.com/samuelmarcos/technical_challenge#readme",
   "devDependencies": {
-    "@shelf/jest-mongodb": "^4.1.7",
     "@types/jest": "^29.5.5",
-    "@types/mongodb": "^4.0.7",
     "@types/node": "^20.6.2",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
@@ -37,6 +35,10 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@types/module-alias": "^2.0.2"
+    "@types/module-alias": "^2.0.2",
+    "module-alias": "^2.2.3"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }
