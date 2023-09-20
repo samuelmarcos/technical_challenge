@@ -1,3 +1,4 @@
+import { ServerError } from "../errors"
 import { HttpResponse } from "../protocols"
 
 
@@ -12,5 +13,12 @@ export const forbidden = (error: Error): HttpResponse => {
   return {
       statusCode: 403,
       body: error
+  }
+}
+
+export const serverError = (error: Error): HttpResponse => {
+  return {
+      statusCode: 500,
+      body: new ServerError(error.stack!)
   }
 }
