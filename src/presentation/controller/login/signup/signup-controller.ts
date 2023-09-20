@@ -1,4 +1,5 @@
-import { badRequest, serverError } from "@/presentation/helpers/http-helpers";
+import { EmailInUseError } from "@/presentation/errors";
+import { badRequest, forbidden, serverError } from "@/presentation/helpers/http-helpers";
 import { Controller, HttpRequest, HttpResponse, Validation } from "@/presentation/protocols";
 import { AddAccount, AddAccountParams } from "@/tests/mocks/domain/usecases/add-account";
 
@@ -16,16 +17,17 @@ export class SignupController implements Controller {
 
       const { name, email, password }: AddAccountParams = httpRequest.body
 
-      await this.addAccount.add({ name, email, password })
+      const account = await this.addAccount.add({ name, email, password })
+
+      if(!account) return forbidden(new EmailInUseError())
 
       return Promise.resolve({
         statusCode: 200,
-        body: {}
+        body: account
       })
 
     } catch (error: any) {
       return serverError(error)
     }
   }
-  
 }
