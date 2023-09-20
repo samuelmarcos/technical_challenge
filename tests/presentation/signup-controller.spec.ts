@@ -3,22 +3,26 @@ import { mockValidation } from '@/tests/mocks/validation/index'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockSignupHttpRequest } from '@/tests/mocks/http'
 import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
-import { badRequest, forbidden, serverError } from '@/presentation/helpers/http-helpers'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http-helpers'
 import { mockAddAccount } from '@/tests/mocks/presentation'
 import { AddAccount } from '../mocks/domain/usecases/add-account'
+import { mockAuthentication } from '@/tests/mocks/domain/usecases'
+import { Authentication } from '@/domain/usecases/account/authenctication'
 
 type SutTypes = {
   sut: Controller
   validationStub: Validation
   addAccountStub: AddAccount
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
   const addAccountStub = mockAddAccount()
-  const sut = new SignupController(validationStub, addAccountStub)
+  const authenticationStub = mockAuthentication()
+  const sut = new SignupController(validationStub, addAccountStub, authenticationStub)
 
-  return { sut, validationStub, addAccountStub }
+  return { sut, validationStub, addAccountStub, authenticationStub }
 }
 
 describe('SignupController tests', () => {
@@ -61,4 +65,10 @@ describe('SignupController tests', () => {
     const httResponse = await sut.handle(mockSignupHttpRequest())
     expect(httResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
+
+  test('should return 200 if valid data is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockSignupHttpRequest())
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token'}))
+})
 })
