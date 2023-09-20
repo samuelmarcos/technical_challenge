@@ -8,6 +8,7 @@
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
+    "test:verbose": "jest --passWithNoTests --noStackTrace --runInBand",
     "prepare": "husky install"
   },
   "repository": {
