@@ -5,7 +5,7 @@ import { mockSignupHttpRequest } from '@/tests/mocks/http'
 import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http-helpers'
 import { mockAddAccount } from '@/tests/mocks/presentation'
-import { AddAccount } from '../mocks/domain/usecases/add-account'
+import { AddAccount } from '../domain/usecases/account/add-account'
 import { mockAuthentication } from '@/tests/mocks/domain/usecases'
 import { Authentication } from '@/domain/usecases/account/authenctication'
 
