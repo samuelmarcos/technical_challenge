@@ -1,13 +1,12 @@
+import { AddAccount, Authentication, Controller, Validation} from '@/presentation/controller/login/signup/signup-controller-protocols'
 import { SignupController } from '@/presentation/controller/login/signup/signup-controller'
 import { mockValidation } from '@/tests/mocks/validation/index'
-import { Controller, Validation } from '@/presentation/protocols'
 import { mockSignupHttpRequest } from '@/tests/mocks/http'
 import { EmailInUseError, MissingParamError, ServerError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http-helpers'
 import { mockAddAccount } from '@/tests/mocks/presentation'
-import { AddAccount } from '../domain/usecases/account/add-account'
 import { mockAuthentication } from '@/tests/mocks/domain/usecases'
-import { Authentication } from '@/domain/usecases/account/authenctication'
+
 
 type SutTypes = {
   sut: Controller
