@@ -1,4 +1,5 @@
 import { AddAccountRepository, LoadAccountByEmailRepository } from "@/data/protocols/db/account";
+import { LoadConfig } from '@/configuration/load-environment'
 import { AccountModel, AddAccountParams } from "@/domain/model";
 import { DynamoDB, GetItemCommandInput, PutItemCommandInput } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
@@ -6,13 +7,13 @@ import { randomUUID } from 'crypto'
 
 export class AccountDynamoRepository implements LoadAccountByEmailRepository, AddAccountRepository {
 
-  constructor(private readonly dynamoDb: DynamoDB) { }
+  constructor(private readonly dynamoDb: DynamoDB, private readonly config = LoadConfig.getInstance().getInveronments() ) { }
   public async add(accountData: AddAccountParams): Promise<AccountModel> {
 
     const id = randomUUID()
 
     const putCommand:PutItemCommandInput = {
-      TableName: process.env.TABLE_NAME,
+      TableName: this.config.TABLE_NAME,
       Item: {
         id: { N: id },
         name: {S: accountData.name },
@@ -30,7 +31,7 @@ export class AccountDynamoRepository implements LoadAccountByEmailRepository, Ad
   public async loadByEmail(email: string): Promise<AccountModel> {
 
     const getCommand: GetItemCommandInput = {
-      TableName: process.env.TABLE_NAME,
+      TableName: this.config.TABLE_NAME,
       Key: {
         ':email': { 'S': email }
       }
