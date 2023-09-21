@@ -7,6 +7,8 @@ custom:
 plugins:
   - serverless-offline
   - serverless-offline-dotenv
+  - serverless-plugin-typescript
+  - serverless-tscpaths
 
 useDotenv: true
 
@@ -20,7 +22,7 @@ provider:
 
 functions:
   signupFunction:
-    handler: index.signupFunction
+    handler: src/index.signupFunction
     events: 
       - http:
           path: /v1/signup

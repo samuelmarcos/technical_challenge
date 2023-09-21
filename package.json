@@ -36,6 +36,8 @@
     "serverless": "^3.35.2",
     "serverless-offline": "^13.0.0",
     "serverless-offline-dotenv": "^0.4.1",
+    "serverless-plugin-typescript": "^2.1.5",
+    "serverless-tscpaths": "^0.0.8",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   },
