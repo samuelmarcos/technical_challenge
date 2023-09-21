@@ -1,13 +1,28 @@
-import { AddAccountRepository, LoadAccountByEmailRepository } from "@/data/protocols/db/account";
+import { AddAccountRepository, LoadAccountByEmailRepository, UpdateAcessTokenRepository } from "@/data/protocols/db/account";
 import { LoadConfig } from '@/configuration/load-environment'
 import { AccountModel, AddAccountParams } from "@/domain/model";
-import { DynamoDB, GetItemCommandInput, PutItemCommandInput } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { DynamoDB, GetItemCommandInput, PutItemCommandInput, UpdateItemCommandInput } from '@aws-sdk/client-dynamodb'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import { randomUUID } from 'crypto'
 
-export class AccountDynamoRepository implements LoadAccountByEmailRepository, AddAccountRepository {
+export class AccountDynamoRepository implements LoadAccountByEmailRepository, AddAccountRepository, UpdateAcessTokenRepository {
 
   constructor(private readonly dynamoDb: DynamoDB, private readonly config = LoadConfig.getInstance().getInveronments() ) { }
+
+  public async updateAccessToken(id: string, token: string): Promise<void> {
+    const updateCommand: UpdateItemCommandInput = {
+      TableName: this.config.TABLE_NAME,
+      Key: marshall({ pk: id }),
+      UpdateExpression: "set #token = :token",
+      ExpressionAttributeNames: {
+          "#token": token
+      },
+      ExpressionAttributeValues: {":token" : { S: token }}
+    }
+
+    const { Attributes } = await this.dynamoDb.updateItem(updateCommand)
+  }
+
   public async add(accountData: AddAccountParams): Promise<AccountModel> {
 
     const id = randomUUID()
