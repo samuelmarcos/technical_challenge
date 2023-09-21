@@ -1,0 +1,27 @@
+service: stoneChallenge
+
+custom:
+  dotenv:
+    path: .env.local
+
+plugins:
+  - serverless-offline
+  - serverless-offline-dotenv
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  environment:
+    ENV: ${env.ENV}
+    REGION: ${env.us-east-1}
+    TABLE_NAME: ${env.test-dynamodb}
+
+functions:
+  signupFunction:
+    handler: index.signupFunction
+    events: 
+      - http:
+          path: /v1/signup
+          method: post
