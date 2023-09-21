@@ -27,6 +27,7 @@ export class LoadConfig {
       ENV: env.ENV,
       REGION:env.REGION,
       TABLE_NAME:env.TABLE_NAME,
+      SECRET: env.SECRET
     }
 
     return configuration

@@ -17,8 +17,9 @@ provider:
   runtime: nodejs16.x
   environment:
     ENV: ${env.ENV}
-    REGION: ${env.us-east-1}
-    TABLE_NAME: ${env.test-dynamodb}
+    REGION: ${env.REGION}
+    TABLE_NAME: ${env.TABLE_NAME}
+    SECRET: ${env.SECRET}
 
 functions:
   signupFunction:
