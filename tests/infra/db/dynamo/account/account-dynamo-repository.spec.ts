@@ -1,5 +1,5 @@
 import { AccountDynamoRepository } from '@/infra/db/dynamo/account/account-dynamo-repository'
-import { DynamoDB, GetItemCommandOutput, PutItemCommandOutput } from '@aws-sdk/client-dynamodb'
+import { DynamoDB, GetItemCommandOutput, PutItemCommandOutput, UpdateItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/mock-account'
 
@@ -23,6 +23,15 @@ const partialClient: Partial<DynamoDB> = {
       $metadata: {},
       Attributes: marshall(mockAccountModel())
 
+    }
+
+    return result
+  },
+
+  async updateItem(): Promise<UpdateItemCommandOutput> {
+    const result:UpdateItemCommandOutput = {
+      $metadata: {},
+      Attributes: marshall(mockAccountModel())
     }
 
     return result
@@ -56,5 +65,12 @@ describe('AccountDynamoRepository', () => {
     expect(account.name).toBe("any_name")
     expect(account.email).toBe("any_email@email.com")
     expect(account.password).toBe("any_password")
+  })
+
+  test('should save an account on success', async () => {
+    const { sut }  = makeSut() 
+    const account = await sut.updateAccessToken('any_id', 'any_token')
+    expect(account).toBe(undefined)
+
   })
 })
