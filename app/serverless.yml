@@ -1,0 +1,71 @@
+service: stoneChallenge
+
+custom:
+  dotenv:
+    path: .env
+  dynamodb:
+    start:
+      stages:
+        - dev
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-tscpaths
+  - serverless-dynamodb-local
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+useDotenv: true
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: test-dynamodb
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  environment:
+    ENV: ${env:ENV}
+    REGION: ${env:REGION}
+    TABLE_NAME: ${env:TABLE_NAME}
+    SECRET: ${env:SECRET}
+    DYNAMO_ENDPOINT: ${env:DYNAMO_ENDPOINT}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:PutItem
+        - dynamodb:ListStreams
+        - dynamodb:DescribeStream
+
+      Resource: "arn:aws:dynamodb:${self.provider.region}:*:table/${self.provider.environment.TABLE_NAME}"
+
+functions:
+  signupFunction:
+    handler: src/index.signupFunction
+    events:
+      - http:
+          path: /v1/signup
+          method: post
+
+

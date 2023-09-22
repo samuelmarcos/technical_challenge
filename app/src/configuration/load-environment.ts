@@ -17,7 +17,7 @@ export class LoadConfig {
   getInveronments():EnvTypes {
     const env: NodeJS.ProcessEnv = process.env
 
-    const nodeEnv = env.NODE_ENV || 'local'
+    const nodeEnv = env.NODE_ENV || 'development'
 
     const path = resolve(__dirname, '..', '..', `.env.${nodeEnv}`)
 
@@ -27,7 +27,8 @@ export class LoadConfig {
       ENV: env.ENV,
       REGION:env.REGION,
       TABLE_NAME:env.TABLE_NAME,
-      SECRET: env.SECRET
+      SECRET: env.SECRET,
+      DYNAMO_ENDPOINT: env.DYNAMO_ENDPOINT
     }
 
     return configuration
