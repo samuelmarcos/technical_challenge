@@ -1,5 +1,5 @@
 import { AccountDynamoRepository } from '@/infra/db/dynamo/account/account-dynamo-repository'
-import { DynamoDB, GetItemCommandOutput, PutItemCommandOutput, UpdateItemCommandOutput } from '@aws-sdk/client-dynamodb'
+import { DynamoDB, QueryCommandOutput, PutItemCommandOutput, UpdateItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/mock-account'
 
@@ -8,19 +8,22 @@ type SutTypes = {
 }
 
 const partialClient: Partial<DynamoDB> = {
-  async getItem(): Promise<GetItemCommandOutput> {
-    const result: GetItemCommandOutput = {
+  async query(): Promise<QueryCommandOutput> {
+    const items = [marshall(mockAccountModel())]
+    const result: QueryCommandOutput = {
       $metadata: {
 
       },
-      Item: marshall(mockAccountModel())
+      Items: items
     }
     return result
   },
 
   async putItem(): Promise<PutItemCommandOutput> {
     const result:PutItemCommandOutput = {
-      $metadata: {},
+      $metadata: {
+        httpStatusCode: 200
+      },
       Attributes: marshall(mockAccountModel())
 
     }
