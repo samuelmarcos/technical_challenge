@@ -6,8 +6,8 @@ echo Create table
 
 aws dynamodb create-table \
     --table-name MusicCollection \
-    --attribute-definitions AttributeName=Artist,AttributeType=S AttributeName=SongTitle,AttributeType=S \
-    --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
+    --attribute-definitions AttributeName=id,AttributeType=S AttributeName=email,AttributeType=S \
+    --key-schema AttributeName=id,KeyType=HASH AttributeName=email,KeyType=RANGE \
     --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
     --tags Key=Owner,Value=blueTeam
 

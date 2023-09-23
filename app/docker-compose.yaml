@@ -1,31 +1,56 @@
-version: '3.8'
-
 services:
-  localstack:
-      container_name: "stone_challenge"
-      image: localstack/localstack
-      network_mode: bridge
-      ports:
-        - "127.0.0.1:53:53"                
-        - "127.0.0.1:53:53/udp"            
-        - "127.0.0.1:443:443"              
-        - "127.0.0.1:4510-4530:4510-4530"
-        - "127.0.0.1:4566:4566"
-        - "127.0.0.1:4571:4571"
-      environment:
-        - AWS_DEFAULT_REGION=us-east-1
-        - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-        - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-        - DEFAULT_REGION=us-east-1
-        - http_proxy=
-        - https_proxy=
-        - SERVICES=dynamodb,gateway,lambda
-        - DEBUG=${DEBUG-}
-        - DATA_DIR=${DATA_DIR-}
-        - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
-        - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY-}  
-        - HOST_TMP_FOLDER=${TMPDIR:-/tmp/}localstack
-        - DOCKER_HOST=unix:///var/run/docker.sock
-      volumes:
-        - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
-        - "/var/run/docker.sock:/var/run/docker.sock"
+  dynamodb:
+    image: amazon/dynamodb-local:1.16.0
+    container_name: app-dynamodb
+    hostname: app-dynamodb
+    volumes:
+      - app_dynamodb:/home/dynamodblocal
+    working_dir: /home/dynamodblocal
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ."
+    restart: unless-stopped
+
+  dynamodb_admin:
+    image: aaronshaf/dynamodb-admin
+    container_name: app-dynamodb_admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb:8000
+    depends_on:
+      - dynamodb
+    restart: unless-stopped
+
+  dynamodb_migrator:
+    image: banst/awscli:1.18.76
+    container_name: app-dynamodb_migrator
+    working_dir: /home/dynamodblocal
+    command: dynamodb create-table --cli-input-json file://user-schema.json --endpoint-url http://dynamodb:8000
+    volumes:
+      - ./schema:/home/dynamodblocal
+    environment:
+      - AWS_ACCESS_KEY_ID=unicorn_user
+      - AWS_SECRET_ACCESS_KEY=magical_password
+      - AWS_DEFAULT_REGION=ap-southeast-1
+    depends_on:
+      - dynamodb
+
+  dynamodb_seeder:
+    image: banst/awscli:1.18.76
+    container_name: app-dynamodb_seeder
+    working_dir: /home/dynamodblocal
+    volumes:
+      - ./schema:/home/dynamodblocal
+    environment:
+      - AWS_ACCESS_KEY_ID=unicorn_user
+      - AWS_SECRET_ACCESS_KEY=magical_password
+      - AWS_DEFAULT_REGION=ap-southeast-1
+    depends_on:
+      - dynamodb_migrator
+      - dynamodb
+    restart: on-failure
+
+volumes:
+  app_dynamodb:
+    driver: local

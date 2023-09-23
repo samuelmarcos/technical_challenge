@@ -1,0 +1,40 @@
+{
+    "stone-dynamo-user": [
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "1"
+            },
+            "email": {
+              "S": "samuel@email.com"
+            },
+            "name": {
+              "S": "samuel marcos"
+            },
+            "is_deleted": {
+              "BOOL": false
+            }
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item": {
+            "id": {
+              "S": "2"
+            },
+            "email": {
+              "S": "marcos@email.com"
+            },
+            "name": {
+              "S": "marcos souza"
+            },
+            "is_deleted": {
+              "BOOL": false
+            }
+          }
+        }
+      }
+    ]
+  }
