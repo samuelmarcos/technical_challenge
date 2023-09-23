@@ -33,4 +33,11 @@ describe('Email Validation', () => {
     });
     expect(sut.validate).toThrow();
   });
+
+  test('should return a InvalidParamError if a email is not valid', () => {
+    const { sut, emailValidatoStub } = makeSut();
+
+    jest.spyOn(emailValidatoStub, 'isValid').mockReturnValueOnce(false);
+    expect(sut.validate).toThrow();
+  });
 });

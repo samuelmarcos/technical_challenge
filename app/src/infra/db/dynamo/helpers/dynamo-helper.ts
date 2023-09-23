@@ -7,7 +7,7 @@ export const DynamoHelper = {
 
   getClient(): DynamoDB {
     const client = new DynamoDB({
-      region: config.REGION || 'us-east-1',
+      region: config.REGION,
       endpoint: config.DYNAMO_ENDPOINT
     })
     return client

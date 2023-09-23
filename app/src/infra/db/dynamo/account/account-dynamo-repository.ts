@@ -37,9 +37,9 @@ export class AccountDynamoRepository implements LoadAccountByEmailRepository, Ad
       }
     }
 
-    const { $metadata } = await this.dynamoDb.putItem(putCommand)
+    const putResponse = await this.dynamoDb.putItem(putCommand)
 
-    if ($metadata.httpStatusCode === 200) {
+    if (putResponse) {
       return {
         id: id,
         ...accountData

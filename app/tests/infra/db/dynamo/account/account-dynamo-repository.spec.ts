@@ -5,9 +5,24 @@ import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/moc
 
 type SutTypes = {
   sut: AccountDynamoRepository
+  dynamoDBStub: DynamoDB
 }
 
-const partialClient: Partial<DynamoDB> = {
+const emptyQurtyresult: QueryCommandOutput = {
+  $metadata: {
+    httpStatusCode: 400
+  },
+  Items: []
+}
+
+const failPutItemResult : PutItemCommandOutput = {
+  $metadata: {
+    httpStatusCode: 400
+  },
+  Attributes: undefined
+}
+
+class DynamoDBStub extends DynamoDB{
   async query(): Promise<QueryCommandOutput> {
     const items = [marshall(mockAccountModel())]
     const result: QueryCommandOutput = {
@@ -17,19 +32,19 @@ const partialClient: Partial<DynamoDB> = {
       Items: items
     }
     return result
-  },
+  }
 
   async putItem(): Promise<PutItemCommandOutput> {
     const result:PutItemCommandOutput = {
       $metadata: {
-        httpStatusCode: 200
+        httpStatusCode: 204
       },
       Attributes: marshall(mockAccountModel())
 
     }
 
     return result
-  },
+  }
 
   async updateItem(): Promise<UpdateItemCommandOutput> {
     const result:UpdateItemCommandOutput = {
@@ -42,9 +57,10 @@ const partialClient: Partial<DynamoDB> = {
 }
 
 const makeSut = (): SutTypes => {
-  const sut = new AccountDynamoRepository(partialClient as DynamoDB)
+  const dynamoDBStub = new DynamoDBStub()
+  const sut = new AccountDynamoRepository(dynamoDBStub as DynamoDB)
 
-  return { sut }
+  return { sut, dynamoDBStub }
 }
 
 describe('AccountDynamoRepository', () => {
@@ -59,6 +75,14 @@ describe('AccountDynamoRepository', () => {
     expect(account.password).toBe("any_password")
   })
 
+  test('should null if no account is found', async () => {
+    const { sut, dynamoDBStub  }  = makeSut()
+    jest.spyOn(dynamoDBStub, 'query').mockImplementationOnce(() => Promise.resolve(emptyQurtyresult))
+    const account = await sut.loadByEmail("any_email@email.com.br")
+
+    expect(account).toEqual(null)
+  })
+
   test('should save an account on success', async () => {
     const { sut }  = makeSut() 
     const account = await sut.add(mockAddAccountParams())
@@ -68,6 +92,13 @@ describe('AccountDynamoRepository', () => {
     expect(account.name).toBe("any_name")
     expect(account.email).toBe("any_email@email.com")
     expect(account.password).toBe("any_password")
+  })
+
+  test('should returns null if fail on saving an account', async () => {
+    const { sut, dynamoDBStub }  = makeSut() 
+    jest.spyOn(dynamoDBStub, 'putItem').mockImplementationOnce(() => {Promise.resolve(failPutItemResult)})
+    const account = await sut.add(mockAddAccountParams())
+    expect(account).toEqual(null)
   })
 
   test('should save an account on success', async () => {
