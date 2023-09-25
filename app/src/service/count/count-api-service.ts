@@ -6,10 +6,8 @@ export class CountApiService implements AccessApiService {
   constructor(private readonly httpRequester: HttpRequester) {}
   public async countTonAccess(): Promise<CountModel> {
     
-    await this.httpRequester.get<CountModel>()
+    const countApiResult = await this.httpRequester.get<CountModel>()
 
-    return Promise.resolve({
-      value: 123
-    })
+    return countApiResult
   }
 }
