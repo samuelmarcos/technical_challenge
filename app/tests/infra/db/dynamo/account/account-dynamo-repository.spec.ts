@@ -1,5 +1,5 @@
 import { AccountDynamoRepository } from '@/infra/db/dynamo/account/account-dynamo-repository'
-import { DynamoDB, QueryCommandOutput, PutItemCommandOutput, UpdateItemCommandOutput } from '@aws-sdk/client-dynamodb'
+import { DynamoDB, GetItemCommandOutput, PutItemCommandOutput, UpdateItemCommandOutput } from '@aws-sdk/client-dynamodb'
 import { marshall } from '@aws-sdk/util-dynamodb'
 import { mockAccountModel, mockAddAccountParams } from '@/tests/mocks/domain/mock-account'
 
@@ -8,11 +8,11 @@ type SutTypes = {
   dynamoDBStub: DynamoDB
 }
 
-const emptyQurtyresult: QueryCommandOutput = {
+const emptyGetresult: GetItemCommandOutput = {
   $metadata: {
     httpStatusCode: 400
   },
-  Items: []
+  Item: undefined
 }
 
 const failPutItemResult : PutItemCommandOutput = {
@@ -23,13 +23,12 @@ const failPutItemResult : PutItemCommandOutput = {
 }
 
 class DynamoDBStub extends DynamoDB{
-  async query(): Promise<QueryCommandOutput> {
-    const items = [marshall(mockAccountModel())]
-    const result: QueryCommandOutput = {
+  async getItem(): Promise<GetItemCommandOutput> {
+    const result: GetItemCommandOutput = {
       $metadata: {
 
       },
-      Items: items
+      Item: marshall(mockAccountModel())
     }
     return result
   }
@@ -77,7 +76,7 @@ describe('AccountDynamoRepository', () => {
 
   test('should null if no account is found', async () => {
     const { sut, dynamoDBStub  }  = makeSut()
-    jest.spyOn(dynamoDBStub, 'query').mockImplementationOnce(() => Promise.resolve(emptyQurtyresult))
+    jest.spyOn(dynamoDBStub, 'getItem').mockImplementationOnce(() => Promise.resolve(emptyGetresult))
     const account = await sut.loadByEmail("any_email@email.com.br")
 
     expect(account).toEqual(null)

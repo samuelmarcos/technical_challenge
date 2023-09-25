@@ -1,7 +1,7 @@
 import { AddAccountRepository, LoadAccountByEmailRepository, UpdateAcessTokenRepository } from "@/data/protocols/db/account";
 import { LoadConfig } from '@/configuration/load-environment'
 import { AccountModel, AddAccountParams } from "@/domain/model";
-import { DynamoDB, PutItemCommandInput, UpdateItemCommandInput, QueryCommandInput, QueryCommandOutput } from '@aws-sdk/client-dynamodb'
+import { DynamoDB, PutItemCommandInput, UpdateItemCommandInput, GetItemCommandInput, AttributeValue } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import { randomUUID } from 'crypto'
 
@@ -51,18 +51,16 @@ export class AccountDynamoRepository implements LoadAccountByEmailRepository, Ad
 
 
   public async loadByEmail(email: string): Promise<AccountModel> {
-    const querCommand: QueryCommandInput = {
+    const getCommand: GetItemCommandInput = {
       TableName: this.config.TABLE_NAME,
-      KeyConditionExpression: "email = :email",
-      ExpressionAttributeValues: {
-        ":email": { S: email }
-      }
+      Key: marshall({
+        "email": email
+      })
     }
+    const { Item } = await this.dynamoDb.getItem(getCommand)
 
-    const { Items } = await this.dynamoDb.query(querCommand)
-
-    if(Items.length === 0) return null
-
-    return unmarshall(Items[0]) as AccountModel
+    if(!Item) return null
+    
+    return unmarshall(Item) as AccountModel
   }
 }
