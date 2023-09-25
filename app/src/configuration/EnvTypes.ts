@@ -5,4 +5,5 @@ export interface EnvTypes {
   SECRET: string
   DYNAMO_ENDPOINT:string
   COUNT_KEY: string
+  COUNT_ACCESS_URL: string
 }
