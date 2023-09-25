@@ -5,10 +5,8 @@ export class AxiosAdapter implements HttpRequester {
   constructor(private readonly axiosInstance: AxiosInstance) {}
 
   public async get<T>(url: string): Promise<T> {
-
-    await this.axiosInstance.get<T>(url)
-    
-    return Promise.resolve({} as T )
+    const response = await this.axiosInstance.get<T>(url)
+    return response as T
   }
   
 }
