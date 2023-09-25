@@ -2,7 +2,7 @@ import { IncreaseAccessCountController } from '@/presentation/controller/count/i
 import { IncreaseCount , Controller, HttpRequest } from '@/presentation/controller/count/increase/increase-access-count-controller-protocols'
 import { mockIncreaseCount } from '@/tests/mocks/presentation/mock-increase-count'
 import { ServerError } from '@/presentation/errors'
-import { serverError } from '@/presentation/helpers/http-helpers'
+import { ok, serverError } from '@/presentation/helpers/http-helpers'
 
 
 type SutTypes = {
@@ -35,5 +35,11 @@ describe('IncreaseAccessCountController tests', () => {
     jest.spyOn(increaseCount, 'increase').mockImplementationOnce(() => { return new Promise((resolve, reject) => reject(new Error()))})
     const httpResponse = await sut.handle(mockRequest)
     expect(httpResponse).toEqual(serverError(new ServerError('any_stack')))
+  })
+
+  test('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest)
+    expect(httpResponse).toEqual(ok({ data : 'counter incremented'}))
   })
 })
