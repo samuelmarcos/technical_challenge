@@ -23,6 +23,7 @@ provider:
     DYNAMO_ENDPOINT: ${env:DYNAMO_ENDPOINT}
     COUNT_KEY: ${env:COUNT_KEY}
     COUNT_ACCESS_URL: ${env:COUNT_ACCESS_URL}
+    INCREASE_COUNT_ACCESS_URL: ${env:INCREASE_COUNT_ACCESS_URL}
 
   iamRoleStatements:
     - Effect: Allow
@@ -42,5 +43,23 @@ functions:
       - http:
           path: /v1/signup
           method: post
+  addAccessCountFunction:
+    handler: src/index.addAccessCountFunction
+    events:
+      - http:
+          path: /v1/count
+          method: get
+  userInfoFunction:
+    handler: src/index.userInfoFunction
+    events:
+      - http:
+          path: /v1/info/${email}
+          method: get
+  increaseAccessCountFunction:
+    handler: src/index.increaseAccessCountFunction
+    events:
+      - http:
+          path: /v1/increase
+          method: get
 
 
