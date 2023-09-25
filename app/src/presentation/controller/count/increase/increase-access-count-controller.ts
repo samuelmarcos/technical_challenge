@@ -1,4 +1,4 @@
-import { serverError } from '@/presentation/helpers/http-helpers'
+import { ok, serverError } from '@/presentation/helpers/http-helpers'
 import { Controller, HttpRequest, HttpResponse, IncreaseCount } from './increase-access-count-controller-protocols'
 
 
@@ -11,8 +11,8 @@ export class IncreaseAccessCountController implements Controller {
     try {
       await this.increaseCount.increase()
     
-      return Promise.resolve(null)
-      
+      return ok({ data : 'counter incremented'})
+  
     } catch(err: any) {
       return serverError(err)
     }
