@@ -53,7 +53,7 @@ functions:
     handler: src/index.userInfoFunction
     events:
       - http:
-          path: /v1/info/${email}
+          path: /v1/info/{email}
           method: get
   increaseAccessCountFunction:
     handler: src/index.increaseAccessCountFunction
