@@ -3,7 +3,7 @@ import { AddCount, Controller, HttpRequest } from '@/presentation/controller/cou
 import { mockAddCount } from '../mocks/presentation/mock-add-count'
 import { ServerError } from '@/presentation/errors'
 import { ok, serverError } from '@/presentation/helpers/http-helpers'
-import { mockCountModel } from '../mocks/domain/mock-access'
+import { mockCountModel } from '@/tests/mocks/domain/mock-access'
 
 type SutTypes = {
   sut: Controller
@@ -37,4 +37,9 @@ describe('AddCountController tests', () => {
     expect(httpResponse).toEqual(serverError(new ServerError('any_stack')))
   })
 
+  test('should return 200 if valid data is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest)
+    expect(httpResponse).toEqual(ok(mockCountModel()))
+  })
 })
