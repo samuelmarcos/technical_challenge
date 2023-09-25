@@ -2,7 +2,8 @@ import { AddCountController } from '@/presentation/controller/count/access/add-c
 import { AddCount, Controller, HttpRequest } from '@/presentation/controller/count/access/add-count-controller-protocols'
 import { mockAddCount } from '../mocks/presentation/mock-add-count'
 import { ServerError } from '@/presentation/errors'
-import { serverError } from '@/presentation/helpers/http-helpers'
+import { ok, serverError } from '@/presentation/helpers/http-helpers'
+import { mockCountModel } from '../mocks/domain/mock-access'
 
 type SutTypes = {
   sut: Controller
@@ -35,4 +36,5 @@ describe('AddCountController tests', () => {
     const httpResponse = await sut.handle(mockRequest)
     expect(httpResponse).toEqual(serverError(new ServerError('any_stack')))
   })
+
 })
