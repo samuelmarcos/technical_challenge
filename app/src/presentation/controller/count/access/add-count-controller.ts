@@ -1,3 +1,4 @@
+import { serverError } from '@/presentation/helpers/http-helpers'
 import { AddCount, Controller, HttpRequest, HttpResponse } from './add-count-controller-protocols'
 
 export class AddCountController implements Controller {
@@ -6,11 +7,15 @@ export class AddCountController implements Controller {
 
   public async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
 
-    await this.addCount.count()
+    try {
+      await this.addCount.count()
 
-    return Promise.resolve({
-      statusCode: 200,
-      body: {}
-    })
+      return Promise.resolve({
+        statusCode: 200,
+        body: {}
+      })
+    } catch(error: any) {
+      return serverError(error)
+    }
   }
 }
