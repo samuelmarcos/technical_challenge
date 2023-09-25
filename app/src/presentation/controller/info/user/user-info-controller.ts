@@ -1,5 +1,6 @@
 import { badRequest, ok, serverError } from '@/presentation/helpers/http-helpers'
 import { Controller, HttpRequest, HttpResponse, GetUserInfo, Validation } from './user-info-controller-protocols'
+import { NonexistentAccountError } from '@/presentation/errors/account-nonexistent-error'
 
 export class UserInfoController implements Controller {
 
@@ -14,6 +15,8 @@ export class UserInfoController implements Controller {
       if(error) return badRequest(error)
       
       const userInfo = await this.getUserInfo.getInfo(httpRequest.params.email)
+
+      if(!userInfo) return badRequest(new NonexistentAccountError())
     
       return ok(userInfo)
 
