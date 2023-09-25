@@ -1,4 +1,4 @@
-import { serverError } from '@/presentation/helpers/http-helpers'
+import { badRequest, serverError } from '@/presentation/helpers/http-helpers'
 import { Controller, HttpRequest, HttpResponse, GetUserInfo, Validation } from './user-info-controller-protocols'
 
 export class UserInfoController implements Controller {
@@ -9,7 +9,9 @@ export class UserInfoController implements Controller {
 
     try {
 
-      await this.validator.validate(httpRequest.params)
+      const error: any = await this.validator.validate(httpRequest.params)
+
+      if(error) return badRequest(error)
       
       await this.getUserInfo.getInfo(httpRequest.params.email)
     
