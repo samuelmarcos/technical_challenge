@@ -28,7 +28,8 @@ export class LoadConfig {
       REGION:env.REGION,
       TABLE_NAME:env.TABLE_NAME,
       SECRET: env.SECRET,
-      DYNAMO_ENDPOINT: env.DYNAMO_ENDPOINT
+      DYNAMO_ENDPOINT: env.DYNAMO_ENDPOINT,
+      COUNT_KEY: env.COUNT_KEY
     }
 
     return configuration

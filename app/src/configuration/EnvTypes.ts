@@ -4,4 +4,5 @@ export interface EnvTypes {
   TABLE_NAME: string
   SECRET: string
   DYNAMO_ENDPOINT:string
+  COUNT_KEY: string
 }

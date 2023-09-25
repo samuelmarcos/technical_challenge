@@ -21,6 +21,8 @@ provider:
     TABLE_NAME: ${env:TABLE_NAME}
     SECRET: ${env:SECRET}
     DYNAMO_ENDPOINT: ${env:DYNAMO_ENDPOINT}
+    COUNT_KEY: ${env:COUNT_KEY}
+
   iamRoleStatements:
     - Effect: Allow
       Action:
