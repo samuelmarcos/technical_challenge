@@ -1,5 +1,5 @@
 import { CountModel } from "@/domain/model";
 
-export interface CountApiService {
+export interface AccessApiService {
   countTonAccess(): Promise<CountModel>
 }
