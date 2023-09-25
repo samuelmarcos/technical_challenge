@@ -1,5 +1,7 @@
+import { CountModel } from '@/domain/model'
 import { AxiosAdapter } from '@/infra/http/axios-adapter'
 import { HttpRequester } from '@/service/count/protocols'
+import { mockCountModel } from '@/tests/mocks/domain/mock-access'
 import { mockAxiosInstance } from '@/tests/mocks/helpers/mock-axios'
 import { throwError } from '@/tests/mocks/helpers/test-helper'
 import { AxiosInstance } from 'axios'
@@ -29,5 +31,12 @@ describe('AxiosAdapter tests', () => {
     jest.spyOn(axiosInstanceStub, 'get').mockImplementationOnce(throwError)
     const promiseAccount =  sut.get('any_url')
     await expect(promiseAccount).rejects.toThrow()
+  })
+
+  test('should return response on success', async () => {
+    const { sut } = makeSut()
+    const response = await sut.get<CountModel>('any_url')
+    expect(response).toBeTruthy()
+    expect(response).toEqual(mockCountModel())
   })
 })
