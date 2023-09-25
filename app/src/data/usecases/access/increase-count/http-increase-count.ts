@@ -6,8 +6,6 @@ export class HttpIncreaseCount implements IncreaseCount {
   public async increase(): Promise<void> {
 
     await this.countService.increaseCount()
-
-    return Promise.resolve(null)
   }
   
 }
