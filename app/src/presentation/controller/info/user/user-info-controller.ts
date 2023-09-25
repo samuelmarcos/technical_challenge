@@ -1,4 +1,4 @@
-import { badRequest, serverError } from '@/presentation/helpers/http-helpers'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http-helpers'
 import { Controller, HttpRequest, HttpResponse, GetUserInfo, Validation } from './user-info-controller-protocols'
 
 export class UserInfoController implements Controller {
@@ -13,12 +13,10 @@ export class UserInfoController implements Controller {
 
       if(error) return badRequest(error)
       
-      await this.getUserInfo.getInfo(httpRequest.params.email)
+      const userInfo = await this.getUserInfo.getInfo(httpRequest.params.email)
     
-      return Promise.resolve({
-        statusCode: 200,
-        body: {}
-      })
+      return ok(userInfo)
+
     } catch (err: any) {
       return serverError(err)
     }
