@@ -4,7 +4,7 @@ import { mockValidation } from '@/tests/mocks/validation'
 import { mockgetUserInfo } from '../mocks/presentation'
 import { mockGetInfoHttpRequest } from '../mocks/http'
 import {  badRequest, ok, serverError } from '@/presentation/helpers/http-helpers'
-import {  MissingParamError, ServerError } from '@/presentation/errors'
+import {  MissingParamError, ServerError, NonexistentAccountError } from '@/presentation/errors'
 import { mockAccountModel } from '../mocks/domain/mock-account'
 
 type SutTypes = {
@@ -49,6 +49,13 @@ describe('UserInfoController tests', () => {
     jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => new MissingParamError('any_field'))
     const httResponse = await sut.handle(mockGetInfoHttpRequest())
     expect(httResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
+  test('should return 400 if there is no account with this email', async () => {
+    const { sut, getUserInfoStub } = makeSut()
+    jest.spyOn(getUserInfoStub, 'getInfo').mockImplementationOnce(() => Promise.resolve(null))
+    const httResponse = await sut.handle(mockGetInfoHttpRequest())
+    expect(httResponse).toEqual(badRequest(new NonexistentAccountError()))
   })
 
   test('should return 200 if valid data is provided', async () => {
