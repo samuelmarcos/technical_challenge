@@ -6,4 +6,5 @@ export interface EnvTypes {
   DYNAMO_ENDPOINT:string
   COUNT_KEY: string
   COUNT_ACCESS_URL: string
+  INCREASE_COUNT_ACCESS_URL: string
 }

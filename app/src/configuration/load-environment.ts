@@ -30,7 +30,8 @@ export class LoadConfig {
       SECRET: env.SECRET,
       DYNAMO_ENDPOINT: env.DYNAMO_ENDPOINT,
       COUNT_KEY: env.COUNT_KEY,
-      COUNT_ACCESS_URL: env.COUNT_ACCESS_URL
+      COUNT_ACCESS_URL: env.COUNT_ACCESS_URL,
+      INCREASE_COUNT_ACCESS_URL: env.INCREASE_COUNT_ACCESS_URL
     }
 
     return configuration
