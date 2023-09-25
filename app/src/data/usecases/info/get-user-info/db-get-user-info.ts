@@ -11,7 +11,6 @@ export class DbGetUserInfo implements GetUserInfo {
 
     if(!account) return null
 
-    return Promise.resolve(null)
+    return account
   }
-  
 }
