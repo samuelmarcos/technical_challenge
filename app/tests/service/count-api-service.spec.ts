@@ -36,4 +36,11 @@ describe('CountApiService', () => {
     const account = await sut.countTonAccess()
     expect(account).toEqual(mockCountModel())
   })
+
+  test('should return a access count in success', async () => {
+    const { sut, httpRequesterStub } = makeSut()
+    jest.spyOn(httpRequesterStub,'get').mockReturnValueOnce(new Promise((resolve)=>{resolve(mockCountModel())}))
+    const account = await sut.increaseCount()
+    expect(account).toEqual(undefined)
+  })
 })
