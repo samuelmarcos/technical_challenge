@@ -3,8 +3,8 @@ import { UserInfoController } from '@/presentation/controller/info/user/user-inf
 import { mockValidation } from '@/tests/mocks/validation'
 import { mockgetUserInfo } from '../mocks/presentation'
 import { mockGetInfoHttpRequest } from '../mocks/http'
-import {  serverError } from '@/presentation/helpers/http-helpers'
-import {  ServerError } from '@/presentation/errors'
+import {  badRequest, serverError } from '@/presentation/helpers/http-helpers'
+import {  MissingParamError, ServerError } from '@/presentation/errors'
 
 type SutTypes = {
   sut: Controller
@@ -41,5 +41,12 @@ describe('UserInfoController tests', () => {
     const validationSpied = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockGetInfoHttpRequest())
     expect(validationSpied).toHaveBeenCalledWith(mockGetInfoHttpRequest().params)
+  })
+
+  test('should return 400 if validation return an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => new MissingParamError('any_field'))
+    const httResponse = await sut.handle(mockGetInfoHttpRequest())
+    expect(httResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
