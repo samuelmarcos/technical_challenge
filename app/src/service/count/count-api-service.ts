@@ -6,6 +6,11 @@ export class CountApiService implements AccessApiService {
 
   constructor(private readonly httpRequester: HttpRequester,
       private readonly config = LoadConfig.getInstance().getInveronments()) {}
+
+  public async increaseCount(): Promise<void> {
+    await this.httpRequester.get<CountModel>(this.config.INCREASE_COUNT_ACCESS_URL)
+  }
+  
   public async countTonAccess(): Promise<CountModel> {
     
     const countApiResult = await this.httpRequester.get<CountModel>(this.config.COUNT_ACCESS_URL)
