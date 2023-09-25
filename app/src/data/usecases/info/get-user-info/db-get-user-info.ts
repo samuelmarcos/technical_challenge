@@ -7,7 +7,9 @@ export class DbGetUserInfo implements GetUserInfo {
   
   public async getInfo(email: string): Promise<User> {
     
-    await this.loadAccountByEmailRepository.loadByEmail(email)
+    const account = await this.loadAccountByEmailRepository.loadByEmail(email)
+
+    if(!account) return null
 
     return Promise.resolve(null)
   }
