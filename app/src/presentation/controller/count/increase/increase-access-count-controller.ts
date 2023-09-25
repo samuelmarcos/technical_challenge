@@ -1,3 +1,4 @@
+import { serverError } from '@/presentation/helpers/http-helpers'
 import { Controller, HttpRequest, HttpResponse, IncreaseCount } from './increase-access-count-controller-protocols'
 
 
@@ -7,9 +8,14 @@ export class IncreaseAccessCountController implements Controller {
 
   public async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     
-    await this.increaseCount.increase()
+    try {
+      await this.increaseCount.increase()
     
-    return Promise.resolve(null)
+      return Promise.resolve(null)
+      
+    } catch(err: any) {
+      return serverError(err)
+    }
   }
   
 }
