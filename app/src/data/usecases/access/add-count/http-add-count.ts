@@ -7,10 +7,8 @@ export class HttpAddCount implements AddCount {
 
   public async count(): Promise<CountModel> {
     
-    await this.countService.countTonAccess()
+    const countResult = await this.countService.countTonAccess()
 
-    return Promise.resolve({
-      value: 123
-    })
+    return countResult
   }
 }
