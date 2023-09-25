@@ -4,7 +4,7 @@ import { makeGetUserController } from '@/main/factories/get-user-info-controller
 import { Controller } from '@/presentation/protocols'
 import { EventMapper } from '@/main/helpers/event-mapper'
 
-class SignupFunction {
+class UserInfoFunction {
   public async main(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
     const httpRequest = EventMapper.mapEvent(event)
     const controller: Controller = makeGetUserController()
@@ -18,8 +18,8 @@ class SignupFunction {
   }
 }
 
-const handler = new SignupFunction()
+const handler = new UserInfoFunction()
 
 
-export const userInfoFunction = handler.main.bind(SignupFunction)
+export const userInfoFunction = handler.main.bind(UserInfoFunction)
 
