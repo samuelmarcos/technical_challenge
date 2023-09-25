@@ -1,4 +1,4 @@
 
 export interface HttpRequester {
-  get<T>(): Promise<T>
+  get<T>(url: string): Promise<T>
 }
