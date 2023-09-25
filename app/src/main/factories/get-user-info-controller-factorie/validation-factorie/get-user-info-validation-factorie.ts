@@ -9,10 +9,8 @@ import { EmailValidatorAdapter } from '@/infra/validators/email-validator.adapte
 export const makeGetUserInfoValidator = (): ValidationComposite => {
   const validations: Validation[] = [];
 
-  for (const field of ['email']) {
-    validations.push(new RequiredFieldValidation(field));
-    validations.push(new EmailValidation('email', new EmailValidatorAdapter()));
+  validations.push(new RequiredFieldValidation('email'));
+  validations.push(new EmailValidation('email', new EmailValidatorAdapter()));
 
-    return new ValidationComposite(validations);
-  }
+  return new ValidationComposite(validations);
 };
