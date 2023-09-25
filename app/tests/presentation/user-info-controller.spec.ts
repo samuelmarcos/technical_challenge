@@ -3,8 +3,9 @@ import { UserInfoController } from '@/presentation/controller/info/user/user-inf
 import { mockValidation } from '@/tests/mocks/validation'
 import { mockgetUserInfo } from '../mocks/presentation'
 import { mockGetInfoHttpRequest } from '../mocks/http'
-import {  badRequest, serverError } from '@/presentation/helpers/http-helpers'
+import {  badRequest, ok, serverError } from '@/presentation/helpers/http-helpers'
 import {  MissingParamError, ServerError } from '@/presentation/errors'
+import { mockAccountModel } from '../mocks/domain/mock-account'
 
 type SutTypes = {
   sut: Controller
@@ -48,5 +49,11 @@ describe('UserInfoController tests', () => {
     jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => new MissingParamError('any_field'))
     const httResponse = await sut.handle(mockGetInfoHttpRequest())
     expect(httResponse).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
+  test('should return 200 if valid data is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockGetInfoHttpRequest())
+    expect(httpResponse).toEqual(ok(mockAccountModel()))
   })
 })
