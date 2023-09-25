@@ -1,7 +1,8 @@
 import { AccessApiService, HttpRequester } from '@/service/count/protocols'
 import { CountApiService } from '@/service/count/count-api-service'
-import { mockHttpRequester } from '../mocks/services/mock-http-requester'
-import { throwError } from '../mocks/helpers/test-helper'
+import { mockHttpRequester } from '@/tests/mocks/services/mock-http-requester'
+import { throwError } from '@/tests/mocks/helpers/test-helper'
+import { mockCountModel } from '@/tests/mocks/domain/mock-access'
 
 type SutTypes = {
   sut: AccessApiService
@@ -27,5 +28,12 @@ describe('CountApiService', () => {
     jest.spyOn(httpRequesterStub, 'get').mockImplementationOnce(throwError)
     const promiseAccount =  sut.countTonAccess()
     await expect(promiseAccount).rejects.toThrow()
+  })
+
+  test('should return a access count in success', async () => {
+    const { sut, httpRequesterStub } = makeSut()
+    jest.spyOn(httpRequesterStub,'get').mockReturnValueOnce(new Promise((resolve)=>{resolve(mockCountModel())}))
+    const account = await sut.countTonAccess()
+    expect(account).toEqual(mockCountModel())
   })
 })
