@@ -6,7 +6,7 @@ export class AxiosAdapter implements HttpRequester {
 
   public async get<T>(url: string): Promise<T> {
     const response = await this.axiosInstance.get<T>(url)
-    return response as T
+    return response.data as T
   }
   
 }

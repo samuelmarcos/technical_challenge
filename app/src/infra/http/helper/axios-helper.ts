@@ -7,7 +7,8 @@ export const AxiosHelper = {
   getInstance(): AxiosInstance {
     return axios.create({
       headers: {
-        'X-Api-Key': config.API_KEY
+        'X-Api-Key': config.API_KEY,
+        'contentType': 'application/json'
       }
     })
   }
