@@ -10,21 +10,17 @@ export class AccountDynamoRepository implements LoadAccountByEmailRepository, Ad
   constructor(private readonly dynamoDb: DynamoDB, private readonly config = LoadConfig.getInstance().getInveronments() ) { }
 
   public async updateAccessToken(email: string, token: string): Promise<void> {
-    try {
-      const updateCommand: UpdateItemCommandInput = {
-        TableName: this.config.TABLE_NAME,
-        Key: marshall({ "email" : email }),
-        UpdateExpression: "set #access_token = :access_token",
-        ExpressionAttributeValues: {":access_token" : { S: token }},
-        ExpressionAttributeNames: {
-          "#access_token": 'access_token'
-      },
+    const updateCommand: UpdateItemCommandInput = {
+      TableName: this.config.TABLE_NAME,
+      Key: marshall({ "email" : email }),
+      UpdateExpression: "set #access_token = :access_token",
+      ExpressionAttributeValues: {":access_token" : { S: token }},
+      ExpressionAttributeNames: {
+        "#access_token": 'access_token'
       }
-  
-      await this.dynamoDb.updateItem(updateCommand)
-    } catch(err: any) {
-      console.log('err :', err)
     }
+
+    await this.dynamoDb.updateItem(updateCommand)
   }
 
   public async add(accountData: AddAccountParams): Promise<AccountModel> {
