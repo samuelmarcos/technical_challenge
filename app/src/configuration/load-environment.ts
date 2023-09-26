@@ -29,9 +29,9 @@ export class LoadConfig {
       TABLE_NAME:env.TABLE_NAME,
       SECRET: env.SECRET,
       DYNAMO_ENDPOINT: env.DYNAMO_ENDPOINT,
-      COUNT_KEY: env.COUNT_KEY,
       COUNT_ACCESS_URL: env.COUNT_ACCESS_URL,
-      INCREASE_COUNT_ACCESS_URL: env.INCREASE_COUNT_ACCESS_URL
+      INCREASE_COUNT_ACCESS_URL: env.INCREASE_COUNT_ACCESS_URL,
+      API_KEY: env.API_KEY
     }
 
     return configuration

@@ -4,7 +4,7 @@ export interface EnvTypes {
   TABLE_NAME: string
   SECRET: string
   DYNAMO_ENDPOINT:string
-  COUNT_KEY: string
   COUNT_ACCESS_URL: string
   INCREASE_COUNT_ACCESS_URL: string
+  API_KEY:string
 }
