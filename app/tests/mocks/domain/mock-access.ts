@@ -1,7 +1,8 @@
-import { CountModel } from "@/domain/model";
+import { CountModel } from '@/domain/model';
 
 export const mockCountModel = (): CountModel => {
   return {
-   value: 123
+    id: 'any_id',
+    value: 123,
   };
 };
