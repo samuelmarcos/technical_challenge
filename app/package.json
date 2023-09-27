@@ -1,7 +1,7 @@
 {
   "name": "technical_challenge",
   "version": "1.0.0",
-  "description": "",
+  "description": "Api para cadastro de contas e manipulação de acesso a domínios",
   "main": "index.js",
   "scripts": {
     "local": "sls offline -s dev --reloadHandler",
@@ -18,8 +18,8 @@
     "url": "git+https://github.com/samuelmarcos/technical_challenge.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Samuel Marcos Neto Barbosa",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/samuelmarcos/technical_challenge/issues"
   },
@@ -53,6 +53,7 @@
     "dotenv": "^16.3.1",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
+    "swagger-ui": "^5.7.2",
     "validator": "^13.11.0"
   },
   "_moduleAliases": {
