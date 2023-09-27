@@ -26,3 +26,5 @@ environment_variables = {
     INCREASE_COUNT_ACCESS_URL="https://api.api-ninjas.com/v1/counter?id=stone_ton&hit=true"
     API_KEY=""
 }
+
+kms_key_arn = ""

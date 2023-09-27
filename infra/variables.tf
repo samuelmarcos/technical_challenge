@@ -40,3 +40,7 @@ variable "cw_metric_filter" {
 variable "environment_variables" {
   description = "Variáveis de ambiente"
 }
+variable "kms_key_arn" {
+  description = "Arn da key do kms"
+  type        = string
+}

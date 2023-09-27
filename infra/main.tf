@@ -12,6 +12,7 @@ module "signup_function" {
     cw_metric_filter = var.cw_metric_filter
 
     environment_variables = var.environment_variables
+    kms_key_arn = var.kms_key_arn
 }
 
 module "add_access_count_function" {
@@ -27,6 +28,7 @@ module "add_access_count_function" {
     cw_metric_filter = var.cw_metric_filter
 
     environment_variables = var.environment_variables
+    kms_key_arn = var.kms_key_arn
 }
 
 module "user_info_function" {
@@ -42,6 +44,7 @@ module "user_info_function" {
     cw_metric_filter = var.cw_metric_filter
 
     environment_variables = var.environment_variables
+    kms_key_arn = var.kms_key_arn
 }
 
 module "increase_access_count_function" {
@@ -57,4 +60,5 @@ module "increase_access_count_function" {
     cw_metric_filter = var.cw_metric_filter
 
     environment_variables = var.environment_variables
+    kms_key_arn = var.kms_key_arn
 }
